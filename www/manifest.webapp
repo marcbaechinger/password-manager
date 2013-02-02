@@ -1,7 +1,7 @@
 {
   "version": "0.1",
-  "name": "My App",
-  "description": "Your new awesome Open Web App",
+  "name": "PwdMan",
+  "description": "App to store passwords secretly",
   "launch_path": "/index.html",
   "icons": {
     "16": "/img/icons/mortar-16.png",
@@ -9,7 +9,7 @@
     "128": "/img/icons/mortar-128.png"
   },
   "developer": {
-    "name": "Your Name",
+    "name": "Marc Baechinger",
     "url": "http://yourawesomeapp.com"
   },
   "installs_allowed_from": ["*"],
