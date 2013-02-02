@@ -15,21 +15,47 @@ define(function(require) {
     // Write your app here.
 
 
-    function formatDate(d) {
-        return (d.getMonth()+1) + '/' +
-            d.getDate() + '/' +
-            d.getFullYear();
-    }
+	var secret,
+		getSecret = function () {
+			if (!secret) {
+				secret = prompt("Enter the secret for encryption");
+			}
+			return secret;
+		},
+		loadData = function (collection) {
+			console.log("loadData");
+			var items = [], i, storedData;
+			if (localStorage.passwords) {
+				console.log("loadData: data available");
+				try {
+					storedData = JSON.parse(sjcl.decrypt(getSecret(), localStorage.passwords));
+				} catch (e) {
+					alert("decryption failed. Probably your secret is wrong.");
+				}
+				for (i = 0; i < storedData.length; i++) {
+					collection.add(storedData[i]);
+				}
+			}
+		},
+		storeData = function (data) {
+			var textRepresentation = JSON.stringify(data),
+				encryptedRepresentation = sjcl.encrypt(getSecret(), textRepresentation);
+				
+			localStorage.passwords = encryptedRepresentation;
+		};
 
     // List view
 
-    var list = $('.list').get(0);
+    var list = $('.list').get(0),
+		selectedItem;
     
+	loadData(list.collection);
 
     // Detail view
 
     var detail = $('.detail').get(0);
     detail.render = function(item) {
+		selectedItem = item;
         $('.user', this).html(item.get('user'));
         $('.password', this).text(item.get('password'));
     };
@@ -40,7 +66,7 @@ define(function(require) {
     edit.render = function(item) {
         item = item || { id: '', get: function() { return ''; } };
 
-        $('input[name=site]', this).val(item.title);
+        $('input[name=site]', this).val(item.get('title'));
         $('input[name=user]', this).val(item.get('user'));
         $('input[name=password]', this).val(item.get('password'));
     };
@@ -56,6 +82,13 @@ define(function(require) {
         }
     };
 
+	$("p.password", detail).click(function (e) {
+		var target = $(e.target);
+		target.addClass("password-unveiled");
+		setTimeout(function () {
+			target.removeClass("password-unveiled");
+		}, 10 * 1000);
+	});
     $('button.add', edit).click(function() {
         var el = $(edit),
 			title = el.find('input[name=site]'),
@@ -77,12 +110,30 @@ define(function(require) {
                	password: pwd.val()
 			});
         }
-
+		storeData(list.collection.toJSON());
         edit.close();
     });
 	
+	$("button.dropSecret", list).click(function () {
+		secret = undefined;
+		alert("secret dropped");
+	});
+	
 
     $('button.delete', detail).click(function() {
-		console.log(list);
+		var title = selectedItem.get("title"), item, i;
+
+		console.log(title);
+		
+		for (i = 0; i < list.collection.length; i++) {
+			item = list.collection.at(i);
+			if (item.get("title") === title) {
+				list.collection.remove(item);
+				storeData(list.collection.toJSON());
+				break;
+			}
+		}
+        detail.close();
+		list.view.render();
     });
 });

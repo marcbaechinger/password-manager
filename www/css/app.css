@@ -59,6 +59,24 @@ x-listview.list li:before {
     margin-right: 5px;
     vertical-align: middle;
 }
-
-ul li {
+p.user {
+	background-color: darkgreen;
+	color: white;
+	text-align: center;
+	border-radius: 4px;
+	padding: 5px;
+}
+p.password {
+	background-color: black;
+	color: black;
+	text-align: center;
+	border-radius: 4px;
+	padding: 5px;
+}
+p.password-unveiled {
+	color: white;
+}
+button {
+	border-radius: 5px;
+	border: 1px solid #333;
 }

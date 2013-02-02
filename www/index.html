@@ -16,6 +16,7 @@
   <body>
     <x-listview class="list">
       <header>
+        <button class="dropSecret">drop</button>
         <h1>Passwords</h1>
         <button class="add" data-view=".edit" data-animation="slideDown">+</button>
       </header>
@@ -26,8 +27,10 @@
         <h1>Details</h1>
         <button data-view="x-view.edit">Edit</button>
       </header>
-      <p class="user"></p>
-      <p class="password"></p>
+      <label>User</label>
+	  <p class="user"></p>
+      <label>Password</label>
+	  <p class="password"></p>
       <button type="submit" data-view=".list" class="btn delete">Delete</button>
     </x-view>
 
@@ -54,6 +57,7 @@
          js files. This loads "main.js", which in turn can load other
          files, all handled by require.js:
          http://requirejs.org/docs/api.html#jsfiles -->
+	<script src="js/lib/sjcl.js"> </script>
     <script type="text/javascript"
             data-main="js/init.js"
             src="js/lib/require.js"></script>
